@@ -6,6 +6,7 @@ import argparse
 
 from metalearner.metalearner import metalearner
 from genetic_algorithm.individual import individual
+from dataset import load_image_dataset, load_video_dataset
 
 if __name__ == '__main__':
 	# Initialize parser
@@ -33,9 +34,14 @@ if __name__ == '__main__':
 	ml = metalearner()
 
 	for t in timesteps:
-		if t == 0:
-			pop = [individual(args.appication) for i in range(args.population_size)]
+		if args.application == "video_configuration":
+			trainX, trainY, testX, testY = 
 		else:
-			pop = [individual(args.appication) for i in range(args.population_size - 1)] + [best_ind]
+			trainX, trainY, testX, testY = 
+
+		if t == 0:
+			pop = [individual(args.application) for i in range(args.population_size)]
+		else:
+			pop = [individual(args.application) for i in range(args.population_size - 1)] + [best_ind]
 
 		best_ind = max(pop)
