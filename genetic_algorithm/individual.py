@@ -1,15 +1,16 @@
 from functools import total_ordering
 import random 
 from copy import deepcopy 
-from clustering_composition import run as clustering_composition_run
-from neural_network_configuration import run as neural_network_configuration_run
-from video_configuration import run as video_configuration_run
+from applications.clustering_composition import run as clustering_composition_run
+from applications.neural_network_configuration import run as neural_network_configuration_run
+from applications.video_configuration import run as video_configuration_run
 
 @total_ordering
 class individual:
-	def _init_(self, application):
+	def __init__(self, application):
 		self.application = application
 		self.fitness = -1
+		self.state = {}
 		
 		if application == "video_configuration":
 			self.chromosome = [
@@ -28,22 +29,22 @@ class individual:
 			self.chromosome = []
 
 			for c in range(num_conv_layers):
-				self.chromosome += [
+				self.chromosome += [[
 					random.choice([8, 16, 32, 64, 128, 256, 512, 1024, 2048]),	# convolutional filters
 					random.choice([0, 1]),										# batch normalisation
 					random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9]),					# activation function
 					random.choice([-1, random.uniform(0.0, 1.0)]),				# dropout
-					random.choice([0, 2, 4, 6, 8]),								# max pooling 
-				]
+					random.choice([0, 2, 4, 6, 8])								# max pooling 
+				]]
 			
 			for d in range(num_dense_layers):
-				self.chromosome += [
+				self.chromosome += [[
 					random.choice([16, 32, 64, 128, 256, 512, 1024, 2048, 4096]),	# dense nodes
 					random.choice([0, 1]),											# batch normalisation
 					random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9]),						# activation function
-					random.choice([-1, random.uniform(0.0, 1.0)]),					# dropout
+					random.choice([-1, random.uniform(0.0, 1.0)])					# dropout
 
-				]
+				]]
 
 			self.chromosome += [
 				num_conv_layers, 
@@ -54,7 +55,7 @@ class individual:
 			self.chromosome = [
 				random.choice([0, 1, 2, 3, 4, 5, 6, 7]), # distance metric
 				random.choice([0, 1, 2, 3, 4, 5, 6, 7]), # cluster initialization 
-				random.choice([0, 1, 2, 3, 4, 5, 6]), # cluster creation
+				random.choice([0, 1, 2, 3, 4, 5, 6, 7]), # cluster creation
 				random.choice([0, 1, 2, 3, 4]), # cluster addition
 				random.choice([0, 1, 2, 3, 4, 5]), # cluster removal
 				random.choice([0, 1, 2, 3]), # cluster merging
@@ -73,12 +74,17 @@ class individual:
 	def __lt__(self, other):
 		return self.fitness < other.fitness
 	
-	def evaluate(self, trainX, trainY, testX, testY, timestep):
+	def evaluate(self, data_loader, timestep, state=None):
 		if self.application == "video_configuration":
-			video_configuration_run(self.chromosome, trainX, trainY, testX, testY, timestep)
+			video_configuration_run.run(self.chromosome, data_loader, timestep)
 		elif self.application == "neural_network_configuration":
-			neural_network_configuration_run(self.chromosome, trainX, trainY, testX, testY, timestep)
+			fitness, loss, state = neural_network_configuration_run.run(self.chromosome, data_loader, timestep, state)
+			self.state = [state]
+			self.loss = loss
 		elif self.application == "clustering_composition":
-			clustering_composition_run(self.chromosome, trainX, trainY, testX, testY, timestep)
+			fitness, state = clustering_composition_run.run(self.chromosome, data_loader, timestep)
 		else:
 			exit(-1)
+
+		self.fitness = fitness
+		return self.fitness
