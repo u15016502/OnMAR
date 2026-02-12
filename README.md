@@ -1,36 +1,159 @@
-# OnMAR
-This repository contains the source code for Online Meta-learning for AutoML in Real-time (OnMAR).
+# PhD Thesis: Experiment Recreation & Extension
 
-Before using the source, please set up your environment by doing the following (tested for Python3.9):
+## Project Overview
+This repository contains the implementation for recreating and extending experiments from the PhD thesis on automated machine learning (AutoML) with meta-learning approaches.
+
+## Project Structure
 
 ```
-pip install --user virtualenv
-virtualenv venv -p python3
-source ./venv/bin/activate
+.
+├── applications/           # Six AutoML applications
+│   ├── base_application.py    # Abstract base class for all applications
+│   ├── configuration/         # Configuration applications
+│   │   ├── cnn/              # CNN hyperparameter optimization
+│   │   └── video/            # Video classification pipeline configuration
+│   ├── composition/          # Composition applications
+│   │   ├── clustering/       # Image clustering algorithm composition
+│   │   └── segmentation/     # Image segmentation algorithm composition
+│   └── generation/           # Generation applications
+│       ├── feature/          # Image feature extraction function generation
+│       └── fuzzyart/         # Fuzzy ART choice function generation
+│
+├── datasets/              # Dataset handling
+│   └── image_datasets.py      # Image dataset loader (MNIST, CIFAR, etc.)
+│
+├── OnMAR/                # Online meta-learning implementation
+│   ├── accuracy-prediction/
+│   └── design-prediction/
+│
+├── OffMAR/               # Offline meta-learning implementation
+│   ├── accuracy-prediction/
+│   └── design-prediction/
+│
+├── sota/                 # State-of-the-art baseline (AutoSklearn)
+│
+├── Thesis/               # Reference materials from thesis
+│
+└── requirements.txt      # Python dependencies
+```
+
+## Current Implementation Status
+
+### ✅ Completed
+- **Base Infrastructure**
+  - Abstract base application interface for plug-and-play design
+  - Standard interface for all applications (train, evaluate, get_design_space, etc.)
+
+- **CNN Configuration Application** (`applications/configuration/cnn/`)
+  - Configurable CNN architecture based on thesis Appendix A.3
+  - Support for multiple datasets: MNIST, Fashion-MNIST, CIFAR-10, CIFAR-100
+  - Design space includes:
+    - Convolutional filters (8-2048)
+    - Batch normalization (on/off)
+    - Activation functions (ELU, GELU, ReLU, SELU, Sigmoid, Softmax, Softplus, Swish, Tanh)
+    - Dropout rates
+    - Max pooling sizes
+    - Dense layer nodes
+    - Optimizers (Adam, Adamax, RMSprop, AdaGrad, AdaDelta, SGD, Nadam)
+    - Learning rates
+    - Number of convolutional layers
+
+- **Dataset Infrastructure** (`datasets/`)
+  - Image dataset loader with support for standard datasets
+  - Automatic downloading and preprocessing
+  - Train/validation/test splits
+
+### 🚧 TODO
+- Video classification application
+- Image clustering composition application
+- Image segmentation composition application
+- Image feature extraction generation application
+- Fuzzy ART choice function generation application
+- OnMAR implementation (online meta-learning)
+- OffMAR implementation (offline meta-learning)
+- AutoSklearn baseline integration
+- Additional datasets (ISIC Melanoma, Mosquito, FruitsGB, video datasets, etc.)
+
+## Installation
+
+1. Create a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. Install dependencies:
+```bash
 pip install -r requirements.txt
-
 ```
 
-# Datasets
+## Usage
 
-The datasets that are supported by this repository (with their respective download links) are given below:
-- [CIFAR10](https://www.tensorflow.org/datasets/catalog/cifar10)
-- [CIFAR100](https://www.tensorflow.org/datasets/catalog/cifar100)
-- [MNIST](https://www.tensorflow.org/datasets/catalog/mnist)
-- [Fashion MNIST](https://www.tensorflow.org/datasets/catalog/fashion_mnist)
-- [Mosquito](https://ieee-dataport.org/keywords/mosquito-classification)
-- [FruitsGB](https://ieee-dataport.org/open-access/fruitsgb-top-indian-fruits-quality)
-- [ISIC Melanoma](https://ieee-dataport.org/documents/isic-melanoma-dataset)
-- [LMTD](https://github.com/jwehrmann/lmtd)
-- [HMDB51](https://paperswithcode.com/dataset/hmdb51)
-- [UCF101](https://paperswithcode.com/dataset/ucf101)
+### Testing the CNN Configuration Application
 
-The latter six datasets are not distributed as part of the repository, but instructions are given below as to where the datasets should be placed in the folder structure. 
+```python
+from applications.configuration.cnn import CNNConfigurationApplication
 
-# Composition of an unsupervised clustering algorithn
+# Initialize application
+app = CNNConfigurationApplication(dataset_name='mnist', random_seed=42)
 
-# Configuration of a convolutional neural network 
+# Load data
+app.load_data()
 
-# Configuration of a video classification pipeline
+# Define a design
+design = {
+    'conv_filters': 32,
+    'batch_norm': 1,
+    'activation': 3,  # ReLU
+    'dropout': 0.2,
+    'max_pool_size': 2,
+    'dense_nodes': 128,
+    'optimizer': 1,  # Adam
+    'learning_rate': 0.001,
+    'num_conv_layers': 2
+}
 
-The TSN implementation used is adapted from the [`yjxiong/tsn-pytorch`](https://github.com/yjxiong/tsn-pytorch) repository.
+# Train and evaluate
+train_metrics = app.train(design, timesteps=50)
+test_metrics = app.evaluate()
+
+print(f"Test Accuracy: {test_metrics['test_accuracy']:.4f}")
+```
+
+Or run the test script:
+```bash
+python applications/configuration/cnn/test_cnn.py
+```
+
+## Design Philosophy
+
+### Plug-and-Play Interface
+All applications inherit from `BaseApplication` and implement:
+- `load_data()`: Load and prepare datasets
+- `get_design_space()`: Define the search space for designs
+- `train(design, timesteps)`: Train with a given design
+- `evaluate(design)`: Evaluate performance
+- `get_meta_features()`: Extract meta-features for meta-learning
+- `get_application_type()`: Return 'configuration', 'composition', or 'generation'
+
+This standardized interface allows OnMAR, OffMAR, and AutoSklearn to work with any application seamlessly.
+
+### Efficient and Distributable
+- PyTorch for efficient GPU utilization
+- Support for both local (Macbook) and HPC cluster execution
+- Automatic device detection (CPU/GPU)
+- Efficient data loading with multiple workers
+- Type hints throughout for clarity and IDE support
+
+## Key References
+- Chapter 8 (Meta-Learning): Describes OnMAR and OffMAR approaches
+- Chapter 6 (Dynamic Designs): First set of applications (configuration, composition, generation)
+- Chapter 7 (Dynamic Design Option Values): Second set of applications
+- Chapter 5 (Research Methodology): Dataset descriptions
+- Appendix A: Complete design space specifications
+
+## Citation
+[Add thesis citation once published]
+
+## License
+[Specify license]
