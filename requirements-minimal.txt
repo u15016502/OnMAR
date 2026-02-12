@@ -1,0 +1,6 @@
+# Minimal requirements for CNN application testing
+torch>=2.0.0
+torchvision>=0.15.0
+numpy>=1.24.0
+tqdm>=4.66.0
+matplotlib>=3.7.0

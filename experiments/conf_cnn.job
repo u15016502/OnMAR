@@ -1,0 +1,57 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=24
+#PBS -P CSCI1166
+#PBS -q smp
+#PBS -l walltime=10:00:00
+#PBS -m abe
+#PBS -M mgerber0608@gmail.com
+
+module purge
+module add chpc/python/anaconda/3-2019.10
+source /apps/chpc/chem/anaconda3-2019.10/etc/profile.d/conda.sh
+conda activate /home/mgerber/myenv_tf2
+
+cd /mnt/lustre3p/users/mgerber/
+cd experiments/test
+
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+
+
+
+?????? timeout 120 python3 -u runner.py --quick-test 2>&1
+
+conda deactivate
+
+
+# 1. Navigate to root folder (if not already there)
+cd "/Users/miagerber/Documents/Journal article experiments"
+
+# 2. Activate virtual environment
+source venv/bin/activate
+
+# 3. Navigate to test directory
+cd experiments/test
+
+# CNN (5 commands)
+python runner.py --application cnn --all-datasets --techniques onmar-design --timesteps 10 --runs 1
+python runner.py --application cnn --all-datasets --techniques onmar-accuracy --timesteps 10 --runs 1
+python runner.py --application cnn --all-datasets --techniques offmar-design --timesteps 10 --runs 1
+python runner.py --application cnn --all-datasets --techniques offmar-accuracy --timesteps 10 --runs 1
+python runner.py --application cnn --all-datasets --techniques autosklearn --timesteps 10 --runs 1
+
+# Segmentation (5 commands)
+python runner.py --application segmentation --all-datasets --techniques onmar-design --timesteps 60 --runs 30
+python runner.py --application segmentation --all-datasets --techniques onmar-accuracy --timesteps 60 --runs 30
+python runner.py --application segmentation --all-datasets --techniques offmar-design --timesteps 60 --runs 30
+python runner.py --application segmentation --all-datasets --techniques offmar-accuracy --timesteps 60 --runs 30
+python runner.py --application segmentation --all-datasets --techniques autosklearn --timesteps 60 --runs 30
+
+# FuzzyART (5 commands)
+python runner.py --application fuzzyart --all-datasets --techniques onmar-design --timesteps 60 --runs 30
+python runner.py --application fuzzyart --all-datasets --techniques onmar-accuracy --timesteps 60 --runs 30
+python runner.py --application fuzzyart --all-datasets --techniques offmar-design --timesteps 60 --runs 30
+python runner.py --application fuzzyart --all-datasets --techniques offmar-accuracy --timesteps 60 --runs 30
+python runner.py --application fuzzyart --all-datasets --techniques autosklearn --timesteps 60 --runs 30

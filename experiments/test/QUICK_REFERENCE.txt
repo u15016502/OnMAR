@@ -1,0 +1,196 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                    CNN EXPERIMENT RUNNER - QUICK REFERENCE                     ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+┌─ BEFORE STARTING ──────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  1. Verify setup:                                                               │
+│     python verify_setup.py                                                      │
+│                                                                                 │
+│  2. Quick test (30 min):                                                        │
+│     python runner.py --quick-test                                               │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ RUNNING EXPERIMENTS ──────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  Single dataset (6-8 hours):                                                    │
+│  → python runner.py --datasets mnist --timesteps 50 --runs 30                   │
+│                                                                                 │
+│  Multiple datasets (12-16 hours):                                               │
+│  → python runner.py --datasets mnist cifar-10 --timesteps 50 --runs 30          │
+│                                                                                 │
+│  All datasets - FULL REPLICATION (24-36 hours):                                 │
+│  → python runner.py --all-datasets --timesteps 50 --runs 30                     │
+│                                                                                 │
+│  Custom parameters:                                                             │
+│  → python runner.py \                                                           │
+│       --datasets mnist fashion-mnist \                                          │
+│       --timesteps 100 \                                                         │
+│       --runs 50 \                                                               │
+│       --autosklearn-time 7200 \                                                 │
+│       --output-dir custom_results                                               │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ ANALYZING RESULTS ────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  Generate report:                                                               │
+│  → python results_analyzer.py \                                                 │
+│       --results-dir experiments/test/results \                                  │
+│       --generate-report                                                         │
+│                                                                                 │
+│  Generate plots:                                                                │
+│  → python results_analyzer.py \                                                 │
+│       --results-dir experiments/test/results \                                  │
+│       --generate-plots                                                          │
+│                                                                                 │
+│  Generate publication tables:                                                   │
+│  → python generate_tables.py \                                                  │
+│       --results-file results/all_results_TIMESTAMP.json \                       │
+│       --formats txt csv latex md                                                │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ WHAT GETS TESTED ─────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  Approaches (13 variants total):                                                │
+│  ✓ OnMAR - Accuracy Prediction (kNN, RF, XGBoost)                              │
+│  ✓ OnMAR - Design Prediction (kNN, RF, XGBoost)                                │
+│  ✓ OffMAR - Accuracy Prediction (kNN, RF, XGBoost)                             │
+│  ✓ OffMAR - Design Prediction (kNN, RF, XGBoost)                               │
+│  ✓ AutoSklearn (baseline)                                                      │
+│                                                                                 │
+│  Datasets (4 total):                                                            │
+│  ✓ MNIST          - 10 classes, 28×28, grayscale                               │
+│  ✓ Fashion-MNIST  - 10 classes, 28×28, grayscale                               │
+│  ✓ CIFAR-10       - 10 classes, 32×32, RGB                                     │
+│  ✓ CIFAR-100      - 100 classes, 32×32, RGB                                    │
+│                                                                                 │
+│  Total experiments: 13 approaches × 4 datasets × 30 runs = 1,560 runs           │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ METRICS LOGGED ───────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  Performance:                                                                   │
+│  • Best performance (peak validation accuracy)                                  │
+│  • Final performance (validation accuracy at last timestep)                     │
+│  • Test performance (accuracy on held-out test set)                             │
+│                                                                                 │
+│  Efficiency (MAR approaches):                                                   │
+│  • Design algorithm calls                                                       │
+│  • Design reuses                                                                │
+│  • Reuse percentage (30-70% expected)                                           │
+│  • Knowledge repository size                                                    │
+│                                                                                 │
+│  Runtime:                                                                       │
+│  • Total time (seconds)                                                         │
+│  • Runtime in minutes                                                           │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ OUTPUT FILES ─────────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  experiments/test/results/                                                      │
+│  ├── individual_runs/              ← Saved during execution                    │
+│  │   └── {dataset}_{approach}_{ml}_run{N}.json                                 │
+│  ├── summary_TIMESTAMP.csv         ← Statistical summary                       │
+│  ├── thesis_rankings_TIMESTAMP.txt ← Table 8.2 format                          │
+│  ├── boxplot_data_TIMESTAMP.json   ← Plot data                                 │
+│  ├── all_results_TIMESTAMP.json    ← Complete raw data                         │
+│  ├── analysis_report.txt           ← Comprehensive analysis                    │
+│  ├── plots/                                                                     │
+│  │   └── {dataset}_boxplot.png     ← Figure 8.7 style                          │
+│  └── tables/                                                                    │
+│      ├── table_8_2_{dataset}.csv                                                │
+│      ├── table_8_2_{dataset}.tex                                                │
+│      ├── performance_summary.csv                                                │
+│      └── statistical_comparisons.csv                                            │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ EXPECTED RESULTS (from Thesis Chapter 8) ────────────────────────────────────┐
+│                                                                                 │
+│  Performance Ranking:                                                           │
+│  1st: OnMAR (typically rank 1-2)                                                │
+│  2nd: OffMAR (rank 2-3)                                                         │
+│  3rd: AutoSklearn (rank 2-4, strong baseline)                                  │
+│                                                                                 │
+│  Meta-Learner Ranking:                                                          │
+│  1st: kNN (often best for OnMAR)                                                │
+│  2nd: XGBoost (competitive)                                                     │
+│  3rd: RF (middle ground)                                                        │
+│                                                                                 │
+│  Runtime Ranking:                                                               │
+│  Fastest:  OnMAR (30-70% design reuse)                                          │
+│  Medium:   AutoSklearn                                                          │
+│  Slowest:  OffMAR (two full phases)                                             │
+│                                                                                 │
+│  Dataset Difficulty:                                                            │
+│  Easiest:     MNIST (~92-95% accuracy)                                          │
+│  Easy-Medium: Fashion-MNIST (~90-93%)                                           │
+│  Medium:      CIFAR-10 (~85-90%)                                                │
+│  Hardest:     CIFAR-100 (~65-75%)                                               │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ TROUBLESHOOTING ──────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  Out of memory:                                                                 │
+│  → Reduce batch size in cnn_application.py                                      │
+│  → Run datasets separately                                                      │
+│  → Use: python runner.py --datasets mnist --runs 30                             │
+│                                                                                 │
+│  Slow runtime:                                                                  │
+│  → Use GPU if available (set CUDA_VISIBLE_DEVICES=0)                            │
+│  → Reduce timesteps for testing: --timesteps 30                                 │
+│  → Reduce runs for testing: --runs 10                                           │
+│                                                                                 │
+│  Import errors:                                                                 │
+│  → Run: python verify_setup.py                                                  │
+│  → Check: pip install -r requirements.txt                                       │
+│  → Verify PYTHONPATH includes project root                                      │
+│                                                                                 │
+│  Missing results:                                                               │
+│  → Check: ls experiments/test/results/individual_runs/ | wc -l                  │
+│  → Results are saved incrementally during execution                             │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ MONITORING PROGRESS ──────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  Terminal 1 - Run experiment:                                                   │
+│  → python runner.py --all-datasets --runs 30                                    │
+│                                                                                 │
+│  Terminal 2 - Monitor progress:                                                 │
+│  → watch -n 60 'ls experiments/test/results/individual_runs/*.json | wc -l'     │
+│                                                                                 │
+│  Terminal 3 - Check latest results:                                             │
+│  → tail -f experiments/test/results/individual_runs/*.json | grep performance   │
+│                                                                                 │
+│  Use screen/tmux for long runs:                                                 │
+│  → screen -S experiments                                                        │
+│  → python runner.py --all-datasets --runs 30                                    │
+│  → Ctrl+A, D (detach)                                                           │
+│  → screen -r experiments (reattach)                                             │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ DOCUMENTATION ────────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  README.md          - Overview and main documentation                           │
+│  USAGE_EXAMPLES.md  - 13 practical examples with code                           │
+│  SUMMARY.md         - What was created and why                                  │
+│  QUICK_REFERENCE.txt - This file                                                │
+│                                                                                 │
+│  For detailed help:                                                             │
+│  → python runner.py --help                                                      │
+│  → python results_analyzer.py --help                                            │
+│  → python generate_tables.py --help                                             │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+═════════════════════════════════════════════════════════════════════════════════
+Created: 2026-01-11  |  Version: 1.0  |  Status: Production Ready
+═════════════════════════════════════════════════════════════════════════════════

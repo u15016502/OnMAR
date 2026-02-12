@@ -1,0 +1,90 @@
+Warning: Segmentation application not available: No module named 'tensorflow'
+
+================================================================================
+EXPERIMENT CONFIGURATION
+================================================================================
+Application: cnn
+Datasets: mnist, fashion-mnist, cifar-10, cifar-100
+Techniques: onmar-design
+Meta-learners: all
+Timesteps: 10
+Runs per config: 1
+AutoSklearn time budget: 3600s
+================================================================================
+
+================================================================================
+COMPREHENSIVE CNN EXPERIMENT RUNNER
+================================================================================
+Application: cnn
+Datasets: mnist, fashion-mnist, cifar-10, cifar-100
+Techniques: onmar-design
+Meta-learners: knn, rf, xgboost
+Timesteps (MAR): 10
+Time budget (AutoSklearn): 3600s
+Number of runs per config: 1
+Results will be saved to: experiments/test/results
+================================================================================
+
+================================================================================
+DATASET: MNIST
+================================================================================
+
+--- Meta-Learner: KNN ---
+
+  [Run 1] OnMAR-DesignPrediction with KNN...
+
+=== OnMAR Design Prediction ===
+Dataset: mnist
+Timesteps: 10
+Meta-learner: KNN
+θt (start using meta-learner): N/2
+θp (pruning threshold): 0.85
+==================================================
+
+Loaded mnist: Train=54000, Val=6000, Test=10000
+
+Timestep 1/10
+  Phase 1: Running design algorithm (t < θt)
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+  Performance: 0.6142
+
+Timestep 2/10
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+  Phase 1: Running design algorithm (t < θt)
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+  Performance: 0.1057
+
+Timestep 3/10
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'
+Warning: Segmentation application not available: No module named 'tensorflow'

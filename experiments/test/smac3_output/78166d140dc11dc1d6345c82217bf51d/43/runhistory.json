@@ -1,0 +1,63 @@
+{
+  "stats": {
+    "submitted": 2,
+    "finished": 2,
+    "running": 0
+  },
+  "data": [
+    {
+      "config_id": 1,
+      "instance": null,
+      "seed": 494155588,
+      "budget": null,
+      "cost": -0.10133333333333333,
+      "time": 27.14201307296753,
+      "cpu_time": 29.426198,
+      "status": 1,
+      "starttime": 1768141643.554622,
+      "endtime": 1768141670.69773,
+      "additional_info": {}
+    },
+    {
+      "config_id": 2,
+      "instance": null,
+      "seed": 494155588,
+      "budget": null,
+      "cost": -0.9791666666666666,
+      "time": 38.222941875457764,
+      "cpu_time": 97.23709399999998,
+      "status": 1,
+      "starttime": 1768141670.700428,
+      "endtime": 1768141708.924665,
+      "additional_info": {}
+    }
+  ],
+  "configs": {
+    "1": {
+      "activation": 7,
+      "batch_norm": 1,
+      "conv_filters": 16,
+      "dense_nodes": 32,
+      "dropout": 1.0,
+      "learning_rate": 0.0411281273406,
+      "max_pool_size": 4,
+      "num_conv_layers": 2,
+      "optimizer": 2
+    },
+    "2": {
+      "activation": 2,
+      "batch_norm": 0,
+      "conv_filters": 128,
+      "dense_nodes": 1024,
+      "dropout": 0.3,
+      "learning_rate": 0.0618795252597,
+      "max_pool_size": 6,
+      "num_conv_layers": 1,
+      "optimizer": 6
+    }
+  },
+  "config_origins": {
+    "1": "Initial Design: Sobol",
+    "2": "Initial Design: Sobol"
+  }
+}
